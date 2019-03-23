@@ -1,61 +1,78 @@
 package com.astudina;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 
-public class PhonebookTest {
+public class PhoneBookTest {
 
-    private Phonebook book;
-    private Map<String, ArrayList<String>> actual;
+    private PhoneBook book;
+    private Map<String, Set<String>> actual;
 
 
     @Before
     public void setUp(){
-        book = new Phonebook();
+        book = new PhoneBook();
 
         actual = new HashMap<>();
 
-        ArrayList<String> actualList = new ArrayList<>();
-        actualList.add("89606817559");
-        actual.put("Anastasia", actualList);
+        Set<String> actualSet = new HashSet<>();
+        actualSet.add("89606817559");
+        actual.put("Anastasia", actualSet);
 
-        actualList = new ArrayList<>();
-        actualList.add("3-84-60");
-        actual.put("Maria", actualList);
+        actualSet = new HashSet<>();
+        actualSet.add("3-84-60");
+        actual.put("Maria", actualSet);
 
-        actualList = new ArrayList<>();
-        actual.put("Pavel", actualList);
-        actualList = new ArrayList<>();
-        actual.put("Denis", actualList);
+        actualSet = new HashSet<>();
+        actual.put("Pavel", actualSet);
+        actualSet = new HashSet<>();
+        actual.put("Denis", actualSet);
     }
+
+
+//    @Test
+//    public void pointerNotEquals(){
+//        Assert.assertNotSame(book.getPhones(), book.phones);
+//    }
+//    @Test
+//    public void getPhones(){
+//        Assert.assertEquals(book.getPhones(), book.phones);
+//    }
 
 
     @Test
     public void addContact() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
-        assertEquals(book.phones, actual);
+        assertEquals(book.getPhones(), actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addContact_ADD_THE_SAME(){
         book.addContact("Anastasia", "89606817559");
         book.addContact("Anastasia", "89606817559");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Anastasia", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Anastasia", actualSet);
+        book.addContact("Anastasia");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addContact_ERROR(){
+        book.addContact("Anastasia", "89606817559&");
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Anastasia", actualSet);
         book.addContact("Anastasia");
     }
 
@@ -64,19 +81,19 @@ public class PhonebookTest {
     public void removeContact() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
         book.addContact("Alla", "53433");
-        actualList = new ArrayList<>();
-        book.addContact("Andrey", actualList);
+        actualSet = new HashSet<>();
+        book.addContact("Andrey", actualSet);
         book.addContact("Anton");
 
         book.removeContact("Alla");
         book.removeContact("Andrey");
         book.removeContact("Anton");
 
-        assertEquals(book.phones, actual);
+        assertEquals(book.getPhones(), actual);
 
     }
 
@@ -84,8 +101,8 @@ public class PhonebookTest {
     public void addNumber() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
         book.addNumber("Anastasia", "6-78-90");
         book.addNumber("Maria", "+79805647392");
@@ -98,17 +115,27 @@ public class PhonebookTest {
         actual.get("Pavel").add("36161");
         actual.get("Denis").add("6793679");
 
-        assertEquals(book.phones, actual);
+        assertEquals(book.getPhones(), actual);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void addNumber_2() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
         book.addNumber("Oleg", "2-16-27");
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void addNumber_3() {
+        book.addContact("Anastasia", "89606817559");
+        book.addContact("Maria", "3-84-60");
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
+        book.addContact("Denis");
+        book.addNumber("Anastasia", "2-16-27?");
     }
 
     @Test
@@ -117,14 +144,14 @@ public class PhonebookTest {
         book.addNumber("Anastasia", "12345");
         book.addContact("Maria", "3-84-60");
         book.addNumber("Maria", "54321");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
         book.removeNumber("Anastasia", "12345");
         book.removeNumber("Maria", "54321");
 
-        assertEquals(book.phones, actual);
+        assertEquals(book.getPhones(), actual);
 
     }
 
@@ -132,8 +159,8 @@ public class PhonebookTest {
     public void searchByNumber() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
         String expected = book.searchByNumber("89606817559");
@@ -145,8 +172,8 @@ public class PhonebookTest {
     public void searchByNumber_NULL() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
         String expected = book.searchByNumber("12345");
@@ -160,14 +187,14 @@ public class PhonebookTest {
         book.addNumber("Anastasia", "567890");
         book.addNumber("Anastasia", "7-16-45");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
         actual.get("Anastasia").add("567890");
         actual.get("Anastasia").add("7-16-45");
 
-        ArrayList expected = book.searchByName("Anastasia");
+        Set<String> expected = book.searchByName("Anastasia");
 
         assertEquals(expected, actual.get("Anastasia"));
 
@@ -177,13 +204,23 @@ public class PhonebookTest {
     public void searchByName_NULL() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
-        ArrayList<String> actualList = new ArrayList<>();
-        book.addContact("Pavel", actualList);
+        Set<String> actualSet = new HashSet<>();
+        book.addContact("Pavel", actualSet);
         book.addContact("Denis");
 
-        ArrayList expected = book.searchByName("Anton");
-
-        assertNull(expected);
+        assertNull(book.searchByName("Anton"));
 
     }
+
+//    @Test
+//    public void pointerNotEqual_2(){
+//        book.addContact("Anastasia", "89606817559");
+//        Assert.assertNotSame(book.searchByName("Anastasia"), book.phones.get("Anastasia"));
+//    }
+//
+//    @Test
+//    public void searchByName_2(){
+//        book.addContact("Anastasia", "89606817559");
+//        Assert.assertEquals(book.searchByName("Anastasia"), book.phones.get("Anastasia"));
+//    }
 }
