@@ -17,14 +17,13 @@ public class PhoneBook {
     }
 
     public void addContact(String name, String number) throws IllegalArgumentException {
-        if (!number.matches("[\\d+\\-*#]+")) {
+        if (!number.matches("[\\d+\\+*#-]+")) {
             throw new IllegalArgumentException("Недопустимый формат номера");
         }
         Set<String> set = new HashSet<>();
         set.add(number);
         addContact(name, set);
     }
-
 
     public void addContact(String name) {
         addContact(name, new HashSet<>());
@@ -34,7 +33,8 @@ public class PhoneBook {
         if (phones.containsKey(name)) {
             throw new IllegalArgumentException("Такой контакт уже существует");
         }
-        phones.put(name, numbers);
+        Set<String> numbers2 = new HashSet<>(numbers);
+        phones.put(name, numbers2);
     }
 
     public void removeContact(String name) {
@@ -42,7 +42,7 @@ public class PhoneBook {
     }
 
     public void addNumber(String name, String number) throws IllegalArgumentException {
-        if (!number.matches("[\\d+\\-*#]+")) {
+        if (!number.matches("[\\d+\\+*#-]+")) {
             throw new IllegalArgumentException("Недопустимый формат номера");
         }
         Set<String> set = phones.get(name);

@@ -1,6 +1,7 @@
 package com.astudina;
 
-import org.junit.Assert;
+//import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class PhoneBookTest {
 
 
     @Before
-    public void setUp(){
+    public void setUp() {
         book = new PhoneBook();
 
         actual = new HashMap<>();
@@ -39,11 +40,11 @@ public class PhoneBookTest {
 
 
 //    @Test
-//    public void pointerNotEquals(){
+//    public void getPhones_1(){
 //        Assert.assertNotSame(book.getPhones(), book.phones);
 //    }
 //    @Test
-//    public void getPhones(){
+//    public void getPhones_2(){
 //        Assert.assertEquals(book.getPhones(), book.phones);
 //    }
 
@@ -60,7 +61,7 @@ public class PhoneBookTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addContact_ADD_THE_SAME(){
+    public void addContact_addTheSame() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Anastasia", "89606817559");
         Set<String> actualSet = new HashSet<>();
@@ -69,11 +70,8 @@ public class PhoneBookTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addContact_ERROR(){
-        book.addContact("Anastasia", "89606817559&");
-        Set<String> actualSet = new HashSet<>();
-        book.addContact("Anastasia", actualSet);
-        book.addContact("Anastasia");
+    public void addContact_invalidFormat() {
+        book.addContact("Anastasia", "89606817559^");
     }
 
 
@@ -118,8 +116,8 @@ public class PhoneBookTest {
         assertEquals(book.getPhones(), actual);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void addNumber_2() {
+    @Test(expected = IllegalArgumentException.class)
+    public void addNumber_noContact() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
         Set<String> actualSet = new HashSet<>();
@@ -128,13 +126,9 @@ public class PhoneBookTest {
         book.addNumber("Oleg", "2-16-27");
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void addNumber_3() {
+    @Test(expected = IllegalArgumentException.class)
+    public void addNumber_invalidFormat() {
         book.addContact("Anastasia", "89606817559");
-        book.addContact("Maria", "3-84-60");
-        Set<String> actualSet = new HashSet<>();
-        book.addContact("Pavel", actualSet);
-        book.addContact("Denis");
         book.addNumber("Anastasia", "2-16-27?");
     }
 
@@ -169,7 +163,7 @@ public class PhoneBookTest {
     }
 
     @Test
-    public void searchByNumber_NULL() {
+    public void searchByNumber_noNumber() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
         Set<String> actualSet = new HashSet<>();
@@ -201,7 +195,7 @@ public class PhoneBookTest {
     }
 
     @Test
-    public void searchByName_NULL() {
+    public void searchByName_noName() {
         book.addContact("Anastasia", "89606817559");
         book.addContact("Maria", "3-84-60");
         Set<String> actualSet = new HashSet<>();
@@ -213,7 +207,7 @@ public class PhoneBookTest {
     }
 
 //    @Test
-//    public void pointerNotEqual_2(){
+//    public void searchByName_1(){
 //        book.addContact("Anastasia", "89606817559");
 //        Assert.assertNotSame(book.searchByName("Anastasia"), book.phones.get("Anastasia"));
 //    }
