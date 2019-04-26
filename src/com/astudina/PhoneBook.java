@@ -33,8 +33,12 @@ public class PhoneBook {
         if (phones.containsKey(name)) {
             throw new IllegalArgumentException("Такой контакт уже существует");
         }
-        Set<String> numbers2 = new HashSet<>(numbers);
-        phones.put(name, numbers2);
+        for (String number: numbers) {
+            if (!number.matches("[\\d+\\+*#-]+")) {
+                throw new IllegalArgumentException("Недопустимый формат номера");
+            }
+        }
+        phones.put(name, new HashSet<>(numbers));
     }
 
     public void removeContact(String name) {
